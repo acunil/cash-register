@@ -40,7 +40,6 @@ function checkCashRegister(price, cash, cid) {
 
   // console.log(change);
   var count = change.reduce((tally, coin) => {
-    var name = coinNames[coinVals.indexOf(coin)];
     // console.log(name);
     tally[coin] = (tally[coin] || 0) + coin;
     return tally;
@@ -70,3 +69,31 @@ console.log(
     ["ONE HUNDRED", 100],
   ])
 ); // 96.74
+
+console.log(
+  checkCashRegister(19.5, 20, [
+    ["PENNY", 0.01],
+    ["NICKEL", 0],
+    ["DIME", 0],
+    ["QUARTER", 0],
+    ["ONE", 1],
+    ["FIVE", 0],
+    ["TEN", 0],
+    ["TWENTY", 0],
+    ["ONE HUNDRED", 0],
+  ])
+); // insufficient funds
+
+console.log(
+  checkCashRegister(19.5, 20, [
+    ["PENNY", 0.5],
+    ["NICKEL", 0],
+    ["DIME", 0],
+    ["QUARTER", 0],
+    ["ONE", 0],
+    ["FIVE", 0],
+    ["TEN", 0],
+    ["TWENTY", 0],
+    ["ONE HUNDRED", 0],
+  ])
+); // closed (exact change)

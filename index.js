@@ -1,4 +1,5 @@
 function checkCashRegister(price, cash, cid) {
+  // cid = Cash In Drawer
   var changeRequired = cash * 100 - price * 100; // decreases as coins are gathered
   const constant = changeRequired; // remains the same
   const originalCid = JSON.parse(JSON.stringify(cid)); // remains the same
@@ -14,7 +15,9 @@ function checkCashRegister(price, cash, cid) {
     "TWENTY",
     "ONE HUNDRED",
   ];
-  let change = []; // actual coins to be given to customer (pennies)
+
+  // find and specify change, remove from cash register
+  var change = []; // actual coins to be given to customer (in pennies)
 
   for (let i = coinVals.length - 1; i >= 0; i--) {
     while (
@@ -30,28 +33,28 @@ function checkCashRegister(price, cash, cid) {
     }
   }
 
+  // Return result
+  // if no match
   if (change.reduce((a, b) => a + b) !== constant) {
     return { status: "INSUFFICIENT_FUNDS", change: [] };
   }
 
+  // if exact match
   if (cid.reduce((acc, el) => acc + el[1], 0) === 0) {
     return { status: "CLOSED", change: originalCid };
   }
 
-  // console.log(change);
+  // if match can be made with some of cid
   var count = change.reduce((tally, coin) => {
-    // console.log(name);
     tally[coin] = (tally[coin] || 0) + coin;
     return tally;
   }, {});
 
   var countArray = [];
-
   for (let key in count) {
     countArray.push([coinNames[coinVals.indexOf(+key)], count[key] / 100]);
   }
 
-  // console.log(countArray);
   countArray.sort((a, b) => b[1] - a[1]);
   return { status: "OPEN", change: countArray };
 }
